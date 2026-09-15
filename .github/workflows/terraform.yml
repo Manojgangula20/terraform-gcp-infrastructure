@@ -27,3 +27,4 @@ jobs:
     with:
       terraform_directory: environments/dev
       run_plan: false
+      enable_gcp_auth: false
