@@ -84,4 +84,17 @@ jobs:
       - name: Terraform Plan
         if: ${{ inputs.run_plan }}
         working-directory: ${{ inputs.terraform_directory }}
-        run: terraform plan -input=false -no-color
+        run: terraform plan -input=false -no-color -out=tfplan
+
+      - name: Show Terraform Plan
+        if: ${{ inputs.run_plan }}
+        working-directory: ${{ inputs.terraform_directory }}
+        run: terraform show -no-color tfplan
+
+      - name: Upload Terraform Plan
+        if: ${{ inputs.run_plan }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: ${{ inputs.terraform_directory }}/tfplan
+          retention-days: 5
