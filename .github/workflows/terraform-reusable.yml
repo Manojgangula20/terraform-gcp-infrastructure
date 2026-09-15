@@ -43,6 +43,15 @@ jobs:
         working-directory: ${{ inputs.terraform_directory }}
         run: terraform validate
 
+      - name: Terraform Security Scan
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          scan-type: config
+          scan-ref: ${{ inputs.terraform_directory }}
+          format: table
+          exit-code: 1
+          severity: HIGH,CRITICAL
+
       - name: Terraform Plan
         if: ${{ inputs.run_plan }}
         working-directory: ${{ inputs.terraform_directory }}
