@@ -26,5 +26,5 @@ jobs:
     uses: ./.github/workflows/terraform-reusable.yml
     with:
       terraform_directory: environments/dev
-      run_plan: false
+      run_plan: true
       enable_gcp_auth: false
