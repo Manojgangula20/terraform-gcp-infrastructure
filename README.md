@@ -317,6 +317,26 @@ This provides a shared and durable state location for CI/CD.
 
 ---
 
+### Backend Bootstrap
+
+The GCS backend was provisioned and successfully used during the project
+deployment and validation.
+
+After completing the deployment, verification, and infrastructure lifecycle
+testing, the GCP resources and Terraform state bucket were intentionally
+destroyed to avoid ongoing cloud costs.
+
+To recreate the environment, first create a GCS bucket and update
+`environments/dev/backend.tf` with the new bucket name before running:
+
+```bash
+terraform init
+```
+
+The backend configuration is retained in the repository to document the
+remote-state architecture used by the project.
+
+
 ## GitHub Actions CI/CD
 
 The repository uses a **reusable GitHub Actions workflow** so Terraform validation logic can be shared across environments.
@@ -353,6 +373,37 @@ The reusable workflow accepts:
 This allows the same CI logic to be reused for additional Terraform environments.
 
 ---
+
+## GitHub Actions CI/CD
+
+The repository uses a reusable GitHub Actions workflow so Terraform
+validation logic can be shared across environments.
+
+### CI checks
+
+...
+
+### Reusable workflow inputs
+
+...
+
+## CI/CD Status
+
+The GitHub Actions workflows were successfully tested during the project
+deployment lifecycle, including Terraform validation, planning, OIDC-based
+GCP authentication, and controlled Terraform apply.
+
+After completing the deployment exercise, the cloud infrastructure and
+Terraform state bucket were intentionally destroyed to avoid ongoing costs.
+
+The workflows remain in the repository and can be reactivated by recreating
+the required GCP backend and authentication resources.
+
+## Secure GitHub → GCP Authentication
+
+The project uses GitHub OIDC with Google Cloud Workload Identity Federation
+instead of storing a long-lived GCP service-account JSON key in GitHub.
+
 
 ## Secure GitHub → GCP Authentication
 
