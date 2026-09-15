@@ -295,6 +295,21 @@ Actions validation workflow.
 
 ## Future Improvements
 
+### Remote State
+
+The Terraform environment is designed to use Google Cloud Storage (GCS)
+for remote Terraform state in a production deployment.
+
+Example backend configuration:
+
+```hcl
+terraform {
+  backend "gcs" {
+    bucket = "YOUR_TERRAFORM_STATE_BUCKET"
+    prefix = "terraform/dev"
+  }
+}
+
 Planned improvements include:
 
 -   GCP Workload Identity Federation for GitHub Actions
