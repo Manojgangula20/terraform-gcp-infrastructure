@@ -1,5 +1,7 @@
 # Terraform GCP Infrastructure
 
+[![Terraform CI](https://github.com/Manojgangula20/terraform-gcp-infrastructure/actions/workflows/terraform.yml/badge.svg)](https://github.com/Manojgangula20/terraform-gcp-infrastructure/actions/workflows/terraform.yml)
+
 Modular Infrastructure-as-Code project for provisioning a secure,
 private GCP environment using Terraform, with reusable GitHub Actions
 CI.
@@ -24,6 +26,33 @@ The GitHub Actions pipeline provides automated Terraform formatting,
 initialization, and validation on pull requests and pushes to `main`.
 
 ## Architecture
+```mermaid
+flowchart TD
+    A[GitHub Repository] --> B[GitHub Actions]
+
+    B --> C[Terraform Format]
+    C --> D[Terraform Init]
+    D --> E[Terraform Validate]
+
+    E --> F[Terraform]
+
+    F --> G[Network Module]
+    F --> H[IAM Module]
+    F --> I[Compute Module]
+
+    G --> G1[VPC]
+    G --> G2[Private Subnet]
+    G --> G3[Cloud Router]
+    G --> G4[Cloud NAT]
+    G --> G5[Firewall]
+
+    H --> H1[Service Account]
+    H1 --> H2[Logging Writer]
+    H1 --> H3[Monitoring Writer]
+
+    I --> I1[Compute Engine VM]
+    I1 --> I2[Debian 12]
+    I1 --> I3[Nginx]
 
 ``` text
                          GitHub Repository
