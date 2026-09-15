@@ -16,8 +16,11 @@ resource "google_compute_instance" "vm" {
   }
 
   service_account {
-    email  = var.service_account_email
-    scopes = ["https://www.googleapis.com/auth/cloud-platform"]
+    email = var.service_account_email
+    scopes = [
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring.write"
+    ]
   }
 
   metadata_startup_script = <<-EOT
