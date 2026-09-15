@@ -43,6 +43,13 @@ jobs:
         working-directory: ${{ inputs.terraform_directory }}
         run: terraform validate
 
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v5
+
+      - name: TFLint
+        working-directory: ${{ inputs.terraform_directory }}
+        run: tflint --init && tflint
+
       - name: Terraform Security Scan
         uses: aquasecurity/trivy-action@0.35.0
         with:
