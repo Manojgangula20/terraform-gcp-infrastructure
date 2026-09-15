@@ -26,6 +26,7 @@ The GitHub Actions pipeline provides automated Terraform formatting,
 initialization, and validation on pull requests and pushes to `main`.
 
 ## Architecture
+
 ```mermaid
 flowchart TD
     A[GitHub Repository] --> B[GitHub Actions]
@@ -54,32 +55,6 @@ flowchart TD
     I1 --> I2[Debian 12]
     I1 --> I3[Nginx]
 
-``` text
-                         GitHub Repository
-                                |
-                                v
-                        GitHub Actions CI
-                                |
-                 +--------------+--------------+
-                 |              |              |
-                 v              v              v
-              Format           Init         Validate
-                                |
-                                v
-                           Terraform
-                                |
-              +-----------------+-----------------+
-              |                 |                 |
-              v                 v                 v
-          Network              IAM             Compute
-              |                 |                 |
-        +-----+------+      Service Account    VM Instance
-        |     |      |                           |
-       VPC  Subnet  Router                     Debian 12
-                    |                           |
-                   NAT                         Nginx
-                    |
-                 Firewall
 ```
 
 ## Infrastructure Components
