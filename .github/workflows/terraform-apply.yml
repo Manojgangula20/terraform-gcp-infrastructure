@@ -1,0 +1,45 @@
+name: Terraform Apply
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  apply:
+    name: Terraform Apply
+    runs-on: ubuntu-latest
+
+    environment:
+      name: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.8"
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: "projects/25139972221/locations/global/workloadIdentityPools/github-actions/providers/github"
+          service_account: "terraform-github@future-pager-404616.iam.gserviceaccount.com"
+
+      - name: Terraform Init
+        working-directory: environments/dev
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        working-directory: environments/dev
+        run: terraform validate
+
+      - name: Terraform Apply
+        working-directory: environments/dev
+        env:
+          TF_VAR_project_id: future-pager-404616
+        run: terraform apply -auto-approve
