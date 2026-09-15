@@ -13,6 +13,21 @@ on:
         required: false
         type: boolean
         default: false
+      enable_gcp_auth:
+        description: "Enable GCP Workload Identity Federation"
+        required: false
+        type: boolean
+        default: false
+      workload_identity_provider:
+        description: "GCP Workload Identity Provider"
+        required: false
+        type: string
+        default: ""
+      service_account:
+        description: "GCP service account email"
+        required: false
+        type: string
+        default: ""
 
 jobs:
   terraform:
@@ -31,6 +46,13 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.9.8"
+
+      - name: Authenticate to Google Cloud
+        if: ${{ inputs.enable_gcp_auth }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ inputs.workload_identity_provider }}
+          service_account: ${{ inputs.service_account }}
 
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
