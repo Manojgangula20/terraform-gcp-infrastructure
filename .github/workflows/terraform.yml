@@ -2,41 +2,13 @@ name: Terraform CI
 
 on:
   workflow_dispatch:
+
   pull_request:
     paths:
       - "environments/**"
       - "modules/**"
       - ".github/workflows/**"
-  push:
-    branches:
-      - main
-    paths:
-      - "environments/**"
-      - "modules/**"
-      - ".github/workflows/**"
 
-permissions:
-  contents: read
-  id-token: write
-
-jobs:
-  terraform:
-    uses: ./.github/workflows/terraform-reusable.yml
-    with:
-      terraform_directory: environments/dev
-      run_plan: false
-EOFcd /workspaces/terraform-gcp-infrastructure
-
-cat > .github/workflows/terraform.yml <<'EOF'
-name: Terraform CI
-
-on:
-  workflow_dispatch:
-  pull_request:
-    paths:
-      - "environments/**"
-      - "modules/**"
-      - ".github/workflows/**"
   push:
     branches:
       - main
