@@ -1,0 +1,45 @@
+name: Reusable Terraform
+
+on:
+  workflow_call:
+    inputs:
+      terraform_directory:
+        description: "Terraform working directory"
+        required: false
+        type: string
+        default: "environments/dev"
+      run_plan:
+        description: "Run terraform plan"
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  terraform:
+    name: Terraform Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.8"
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        working-directory: ${{ inputs.terraform_directory }}
+        run: terraform init -input=false
+
+      - name: Terraform Validate
+        working-directory: ${{ inputs.terraform_directory }}
+        run: terraform validate
+
+      - name: Terraform Plan
+        if: ${{ inputs.run_plan }}
+        working-directory: ${{ inputs.terraform_directory }}
+        run: terraform plan -input=false -no-color

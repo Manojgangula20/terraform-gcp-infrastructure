@@ -1,0 +1,3 @@
+project_id = "YOUR_GCP_PROJECT_ID"
+region     = "asia-south1"
+zone       = "asia-south1-a"

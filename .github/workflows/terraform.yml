@@ -1,0 +1,22 @@
+name: Terraform CI
+
+on:
+  pull_request:
+    paths:
+      - "environments/**"
+      - "modules/**"
+      - ".github/workflows/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "environments/**"
+      - "modules/**"
+      - ".github/workflows/**"
+
+jobs:
+  terraform:
+    uses: ./.github/workflows/terraform-reusable.yml
+    with:
+      terraform_directory: environments/dev
+      run_plan: false
