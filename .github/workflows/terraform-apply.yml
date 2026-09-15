@@ -8,12 +8,9 @@ permissions:
   id-token: write
 
 jobs:
-  apply:
-    name: Terraform Apply
+  plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
-
-    environment:
-      name: production
 
     steps:
       - name: Checkout
@@ -38,8 +35,56 @@ jobs:
         working-directory: environments/dev
         run: terraform validate
 
-      - name: Terraform Apply
+      - name: Terraform Plan
         working-directory: environments/dev
         env:
           TF_VAR_project_id: future-pager-404616
-        run: terraform apply -auto-approve
+        run: terraform plan -input=false -no-color -out=tfplan
+
+      - name: Show Terraform Plan
+        working-directory: environments/dev
+        run: terraform show -no-color tfplan
+
+      - name: Upload Terraform Plan
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-apply-plan
+          path: environments/dev/tfplan
+          retention-days: 1
+
+  apply:
+    name: Apply Approved Plan
+    needs: plan
+    runs-on: ubuntu-latest
+
+    environment:
+      name: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.8"
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: "projects/25139972221/locations/global/workloadIdentityPools/github-actions/providers/github"
+          service_account: "terraform-github@future-pager-404616.iam.gserviceaccount.com"
+
+      - name: Terraform Init
+        working-directory: environments/dev
+        run: terraform init -input=false
+
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v5
+        with:
+          name: terraform-apply-plan
+          path: environments/dev
+
+      - name: Terraform Apply
+        working-directory: environments/dev
+        run: terraform apply -input=false -auto-approve tfplan
