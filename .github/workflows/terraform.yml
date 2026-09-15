@@ -26,5 +26,6 @@ jobs:
     uses: ./.github/workflows/terraform-reusable.yml
     with:
       terraform_directory: environments/dev
+      project_id: future-pager-404616
       run_plan: true
       enable_gcp_auth: false

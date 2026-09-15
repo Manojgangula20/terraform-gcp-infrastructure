@@ -8,21 +8,30 @@ on:
         required: false
         type: string
         default: "environments/dev"
+
+      project_id:
+        description: "GCP project ID"
+        required: true
+        type: string
+
       run_plan:
         description: "Run terraform plan"
         required: false
         type: boolean
         default: false
+
       enable_gcp_auth:
         description: "Enable GCP Workload Identity Federation"
         required: false
         type: boolean
         default: false
+
       workload_identity_provider:
         description: "GCP Workload Identity Provider"
         required: false
         type: string
         default: ""
+
       service_account:
         description: "GCP service account email"
         required: false
@@ -84,6 +93,8 @@ jobs:
       - name: Terraform Plan
         if: ${{ inputs.run_plan }}
         working-directory: ${{ inputs.terraform_directory }}
+        env:
+          TF_VAR_project_id: ${{ inputs.project_id }}
         run: terraform plan -input=false -no-color -out=tfplan
 
       - name: Show Terraform Plan
