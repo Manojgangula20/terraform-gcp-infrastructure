@@ -680,7 +680,3 @@ Potential next steps:
 - Add automated `terraform destroy` workflows for ephemeral environments
 
 ---
-
-## License
-
-MIT License
